@@ -1,0 +1,16 @@
+.pokemonSingle {
+    padding: 20px;
+    border: 1px solid rgb(201, 201, 201);
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgb(235, 235, 235);
+    cursor: pointer;
+    transition: 0.2s ease-in;
+}
+.pokemonSingle img {
+    width: 100%;
+    object-fit: cover;
+}
+.pokemonSingle:hover {
+    background-color: rgb(244, 244, 244);
+
+}

@@ -2,15 +2,24 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { setPokemon } from '../actions/actionCreators'
+import { getPokemons, getSinglePokemon } from '../services/pokemons'
+import { PokemonSingle } from './PokemonSingle/PokemonSingle'
 import './App.css'
 function App() {
   const pokemons = useSelector(state => state.pokemons)
   const dispatch = useDispatch()
   useEffect(() => {
-    fetch('https://pokeapi.co/api/v2/pokemon?limit=10&offset=0')
-      .then(response => response.json())
-      .then(data => dispatch(setPokemon(data.results)))
-      .catch(error => console.error(error))
+    const obtenerPokemons = async () => {
+      try {
+        const pokemons = await getPokemons()
+        const pokemonDetails = await Promise.all(pokemons.map(pokemon => getSinglePokemon(pokemon.url)))
+        dispatch(setPokemon(pokemonDetails))
+      } catch(error) {
+        console.error(error)
+      }
+    }
+
+    obtenerPokemons()
   }, [])
   return (
     <>
@@ -19,13 +28,13 @@ function App() {
         <input type="text" name="" id="" />
         <button>Search</button>
       </form>
-      {
-        pokemons.length > 0 && pokemons.map(pokemon => {
-          return <article key={pokemon.name}>
-            {pokemon.name}
-          </article>
-        })
-      }
+      <section className="pokemons-container">
+        {
+          pokemons.length > 0 && pokemons.map(pokemon => {
+            return <PokemonSingle key={pokemon.name} pokemon={pokemon} />
+          })
+        }
+      </section>
 
     </>
   )
